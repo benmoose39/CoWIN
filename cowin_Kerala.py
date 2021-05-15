@@ -76,12 +76,17 @@ result = {
     }
 
 days = 7
+duplicate_check = ''
 for i in range(days):
     date = (datetime.date.today() + datetime.timedelta(days=i))
     date = date.strftime("%d-%m-%Y")
     
     response = requests.get(f'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={district_code}&date={date}', headers=headers)
     centers = response.json()['centers']
+
+    if response.text == duplicate_check:
+        continue
+    duplicate_check = response.text
     
     if i == days-1 and not result['Center_ID']:
         sys.exit()
